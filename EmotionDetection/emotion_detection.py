@@ -2,15 +2,6 @@ import requests
 import json
 
 def emotion_detector(text_to_analyze):
-    """
-    Sends a text to the Watson NLP emotion detection API and returns the response.
-
-    Args:
-        text_to_analyze (str): The text to analyze for emotions.
-
-    Returns:
-        dict: A dictionary containing emotion scores and the dominant emotion.
-    """
     url = "https://sn-watson-emotion.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/EmotionPredict"
     
     payload = {
@@ -24,6 +15,18 @@ def emotion_detector(text_to_analyze):
     }
     
     response = requests.post(url, json=payload, headers=headers)
+    
+    # Task 7: Handle blank input (status code 400)
+    if response.status_code == 400:
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
+    
     formatted_response = json.loads(response.text)
     emotion_dict = formatted_response["emotionPredictions"][0]["emotion"]
     
